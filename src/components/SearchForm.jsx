@@ -1,33 +1,27 @@
-import { Box, TextField } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import { Button, TextField } from '@mui/material';
 
-const SearchForm = ({ city, setCity, loading, onSubmit, error }) => (
-  <Box
-    sx={{ display: "grid", gap: 2 }}
-    component="form"
-    autoComplete="off"
-    onSubmit={onSubmit}
-  >
-    <TextField
-      id="city"
-      label="Ciudad"
-      variant="outlined"
-      size="small"
-      required
-      value={city}
-      onChange={(e) => setCity(e.target.value)}
-      error={error.error}
-      helperText={error.message}
-    />
-    <LoadingButton
-      type="submit"
-      variant="contained"
-      loading={loading}
-      loadingIndicator="Buscando..."
-    >
-      Buscar
-    </LoadingButton>
-  </Box>
-);
-
-export default SearchForm;
+export default function SearchForm({ city, setCity, loading, onSubmit, error }) {
+  return (
+    <form onSubmit={onSubmit}>
+      <TextField
+        fullWidth
+        label="Ciudad"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        error={error.error}
+        helperText={error.message}
+        disabled={loading}
+      />
+      <Button
+        fullWidth
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2 }}
+        disabled={loading}
+      >
+        {loading ? 'Buscando...' : 'Buscar'}
+      </Button>
+    </form>
+  );
+}

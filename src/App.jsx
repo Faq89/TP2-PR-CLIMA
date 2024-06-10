@@ -24,6 +24,20 @@ export default function App() {
     icon: "",
   });
 
+  const saveSearchHistory = async (weatherData) => {
+    try {
+      await fetch('http://localhost:5000/api/history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(weatherData),
+      });
+    } catch (error) {
+      console.error('Error saving search history:', error);
+    }
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     setError({ error: false, message: "" });
@@ -39,14 +53,20 @@ export default function App() {
         throw { message: "No se pudo encontrar la ciudad" };
       }
 
-      setWeather({
+      const weatherData = {
         city: data.location.name,
         country: data.location.country,
         temperature: data.current.temp_c,
-        condition: data.current.condition.code,
         conditionText: data.current.condition.text,
+      };
+
+      setWeather({
+        ...weatherData,
+        condition: data.current.condition.code,
         icon: data.current.condition.icon,
       });
+
+      await saveSearchHistory(weatherData);
     } catch (error) {
       setError({ error: true, message: error.message });
     } finally {
